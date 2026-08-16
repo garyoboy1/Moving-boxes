@@ -41,11 +41,13 @@
   }
   .mono{ font-family:'JetBrains Mono',monospace; }
 
-  #app{ max-width:520px; margin:0 auto; min-height:100vh; padding-bottom:90px; }
+  #app{ max-width:520px; margin:0 auto; min-height:100vh; padding-bottom:calc(90px + env(safe-area-inset-bottom)); }
 
+  /* iPhone safe-area aware layout */
   /* HEADER */
   header{
-    background:var(--ink); color:var(--paper); padding:22px 18px 26px;
+    background:var(--ink); color:var(--paper);
+    padding:calc(22px + env(safe-area-inset-top)) calc(18px + env(safe-area-inset-right)) 26px calc(18px + env(safe-area-inset-left));
     position:relative; overflow:hidden;
   }
   header::after{
@@ -118,7 +120,7 @@
   }
 
   .header-actions{
-    position:absolute; top:22px; right:18px; display:flex; gap:8px; z-index:2;
+    position:absolute; top:calc(22px + env(safe-area-inset-top)); right:calc(18px + env(safe-area-inset-right)); display:flex; gap:8px; z-index:2;
   }
   .header-actions button{
     background:rgba(255,255,255,0.1); border:none; color:var(--paper); width:36px; height:36px;
@@ -166,7 +168,7 @@
 
   /* FAB */
   .fab{
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    position:fixed; bottom:calc(24px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%);
     max-width:520px; width:calc(100% - 36px);
     display:flex; gap:10px; z-index:20;
   }
@@ -181,7 +183,9 @@
 
   /* FORM / DETAIL VIEWS */
   .view-header{
-    display:flex; align-items:center; gap:12px; padding:16px 18px; background:var(--card);
+    display:flex; align-items:center; gap:12px;
+    padding:calc(16px + env(safe-area-inset-top)) calc(18px + env(safe-area-inset-right)) 16px calc(18px + env(safe-area-inset-left));
+    background:var(--card);
     border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5;
   }
   .back-btn{
