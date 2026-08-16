@@ -201,6 +201,59 @@
   }
   input[type=text]:focus, input[type=number]:focus{ border-color:var(--kraft); }
 
+
+  /* ROOM / TAPE COLOURS */
+  .room-colour-help{ font-size:12px; color:var(--ink-soft); margin:6px 0 10px; line-height:1.4; }
+  .room-colour-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:9px; }
+  .room-colour-option{
+    border:2px solid transparent; border-radius:11px; padding:5px; background:var(--card);
+    cursor:pointer; text-align:center; min-width:0;
+  }
+  .room-colour-option.selected{ border-color:var(--ink); box-shadow:0 0 0 2px rgba(32,35,58,0.08); }
+  .room-colour-swatch{ height:34px; border-radius:7px; border:1px solid rgba(32,35,58,0.16); }
+  .room-colour-name{ display:block; font-size:10px; margin-top:4px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .room-dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; border:1px solid rgba(32,35,58,0.18); vertical-align:0; }
+  .room-colour-strip{ height:7px; width:100%; }
+
+  /* ROOM COLOUR KEY */
+  .room-key-intro{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 15px; margin-bottom:16px; color:var(--ink-soft); font-size:13px; line-height:1.5;
+  }
+  .room-key-summary{
+    display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;
+  }
+  .room-key-stat{
+    background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 13px;
+  }
+  .room-key-stat strong{ display:block; font-family:'Oswald'; font-size:24px; color:var(--ink); line-height:1; }
+  .room-key-stat span{ display:block; margin-top:4px; font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; }
+  .room-key-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; margin-bottom:11px;
+    box-shadow:0 2px 6px rgba(32,35,58,0.05);
+  }
+  .room-key-band{ height:18px; border-bottom:1px solid rgba(32,35,58,.10); }
+  .room-key-body{ padding:13px 14px 14px; }
+  .room-key-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .room-key-room{ font-family:'Oswald'; font-size:20px; text-transform:uppercase; letter-spacing:.03em; line-height:1.1; }
+  .room-key-tape{ font-size:12px; color:var(--ink-soft); margin-top:3px; }
+  .room-key-count{
+    font-family:'JetBrains Mono'; font-size:11px; font-weight:700; background:#F3E4CC; color:var(--kraft-dark);
+    padding:4px 8px; border-radius:20px; white-space:nowrap;
+  }
+  .room-key-boxes{ display:flex; flex-wrap:wrap; gap:6px; margin-top:11px; }
+  .room-key-box{
+    border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:8px; padding:5px 8px;
+    font-family:'JetBrains Mono'; font-size:11px; font-weight:700; cursor:pointer;
+  }
+  .room-key-unused{
+    margin-top:18px; padding-top:16px; border-top:1px dashed var(--line);
+  }
+  .room-key-unused-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:9px; }
+  .room-key-unused-item{ text-align:center; min-width:0; }
+  .room-key-unused-swatch{ height:25px; border-radius:7px; border:1px solid rgba(32,35,58,.16); }
+  .room-key-unused-name{ font-size:9px; color:var(--ink-soft); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
   .photo-drop{
     border:2px dashed var(--line); border-radius:var(--radius); background:var(--card);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -329,17 +382,46 @@
   .manual-entry{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; }
   .manual-entry .item-input-row{ margin-top:8px; }
 
-  /* PRINT */
+  /* PRINT — A6 BOX CARDS */
   #printArea{ display:none; }
   @media print{
-    body *{ visibility:hidden; }
-    #printArea, #printArea *{ visibility:visible; }
+    @page{ size:A6 portrait; margin:0; }
+    html, body{ margin:0 !important; padding:0 !important; background:#fff !important; }
+    body *{ visibility:hidden !important; }
+    #printArea, #printArea *{ visibility:visible !important; }
     #printArea{
-      display:block; position:fixed; top:0; left:0; width:100%; text-align:center; padding-top:40px;
+      display:block; position:absolute; top:0; left:0; width:105mm; margin:0; padding:0;
+      font-family:'Inter',Arial,sans-serif; color:#20233A; background:#fff;
     }
-    #printArea .p-num{ font-family:'Oswald'; font-size:64px; font-weight:700; margin-bottom:10px; }
-    #printArea .p-qr{ display:flex; justify-content:center; margin:10px 0; }
-    #printArea .p-room{ font-family:'Inter'; font-size:18px; color:#333; }
+    .a6-label{
+      width:105mm; height:148mm; margin:0; padding:0; overflow:hidden; background:#fff;
+      display:flex; flex-direction:column; break-after:page; page-break-after:always;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .a6-label:last-child{ break-after:auto; page-break-after:auto; }
+    .a6-room-band{
+      min-height:22mm; padding:4mm 6mm 3.5mm; display:flex; flex-direction:column; justify-content:center;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .a6-room-kicker{ font-size:7.5pt; font-weight:700; letter-spacing:.14em; text-transform:uppercase; opacity:.82; }
+    .a6-room-name{ font-family:'Oswald',Arial,sans-serif; font-size:23pt; font-weight:700; line-height:1.02; text-transform:uppercase; letter-spacing:.02em; }
+    .a6-body{ flex:1; min-height:0; padding:4mm 6mm 4.5mm; display:flex; flex-direction:column; }
+    .a6-box-row{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:.35mm solid #20233A; padding-bottom:2.2mm; }
+    .a6-box-label{ font-size:7.5pt; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+    .a6-box-num{ font-family:'Oswald',Arial,sans-serif; font-size:29pt; font-weight:700; line-height:1; }
+    .a6-colour-name{ font-size:7.5pt; font-weight:700; letter-spacing:.07em; text-transform:uppercase; text-align:right; }
+    .a6-contents-title{ font-family:'Oswald',Arial,sans-serif; font-size:12pt; font-weight:700; letter-spacing:.05em; text-transform:uppercase; margin:3mm 0 1.2mm; }
+    .a6-contents{ flex:1; min-height:0; margin:0; padding:0; list-style:none; align-content:start; }
+    .a6-contents li{ border-bottom:.2mm solid #DED9CC; padding:1.05mm 0; line-height:1.18; break-inside:avoid; }
+    .a6-contents.normal{ font-size:9.5pt; }
+    .a6-contents.compact{ font-size:8pt; }
+    .a6-contents.dense{ font-size:6.8pt; display:grid; grid-template-columns:1fr 1fr; column-gap:4mm; }
+    .a6-footer{ display:flex; align-items:flex-end; justify-content:space-between; gap:4mm; margin-top:2mm; }
+    .a6-footer-copy{ flex:1; padding-bottom:1mm; }
+    .a6-code{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:9pt; letter-spacing:.04em; }
+    .a6-hint{ font-size:6.7pt; color:#555B72; margin-top:1.2mm; line-height:1.25; }
+    .a6-qr{ width:31mm; height:31mm; display:flex; align-items:center; justify-content:center; flex:0 0 31mm; }
+    .a6-qr canvas, .a6-qr img{ width:31mm !important; height:31mm !important; display:block; }
   }
   .save-toast{
     position:fixed; left:50%; transform:translateX(-50%); bottom:100px; z-index:50;
@@ -359,11 +441,7 @@
 <body>
 <div id="app"></div>
 <div id="saveToast" class="save-toast"></div>
-<div id="printArea">
-  <div class="p-num" id="printNum"></div>
-  <div class="p-qr" id="printQr"></div>
-  <div class="p-room" id="printRoom"></div>
-</div>
+<div id="printArea"></div>
 <div id="lightbox" class="lightbox" onclick="closeLightbox()"><img id="lightboxImg" src=""></div>
 
 <script>
@@ -377,8 +455,66 @@ const ICONS = {
   clipboard: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 011 1v2H8V3a1 1 0 011-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>`,
   download: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>`,
   check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  printer: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></svg>`,
+  palette: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18h1.4a1.9 1.9 0 001.4-3.2 1.9 1.9 0 011.4-3.2H18A3 3 0 0021 11.6 9 9 0 0012 3z"/><circle cx="7.5" cy="10" r="1"/><circle cx="10" cy="6.8" r="1"/><circle cx="14" cy="6.8" r="1"/><circle cx="16.5" cy="10" r="1"/></svg>`,
   transfer: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v12"/><path d="M3 11l4 4 4-4"/><path d="M17 21V9"/><path d="M21 13l-4-4-4 4"/></svg>`
-};
+ };
+
+// Tape colours based on the physical rolls in the supplied photo.
+// The blue/green split option is included as an extra room combination if all single colours are used.
+const ROOM_COLOURS = [
+  {id:'cream', name:'Cream', css:'#EFE3C2', text:'#20233A'},
+  {id:'pink', name:'Pink', css:'#E85D86', text:'#FFFFFF'},
+  {id:'sky', name:'Sky blue', css:'#3FA7CF', text:'#FFFFFF'},
+  {id:'mint', name:'Light green', css:'#5DBB72', text:'#163A25'},
+  {id:'red', name:'Red', css:'#E23A50', text:'#FFFFFF'},
+  {id:'brown', name:'Brown', css:'#9A7040', text:'#FFFFFF'},
+  {id:'purple', name:'Purple', css:'#65449A', text:'#FFFFFF'},
+  {id:'navy', name:'Navy', css:'#284968', text:'#FFFFFF'},
+  {id:'orange', name:'Orange', css:'#F06A22', text:'#20233A'},
+  {id:'green', name:'Green', css:'#15934A', text:'#FFFFFF'},
+  {id:'yellow', name:'Yellow', css:'#F2B719', text:'#20233A'},
+  {id:'black', name:'Black', css:'#252525', text:'#FFFFFF'},
+  {id:'bluegreen', name:'Blue + green', css:'linear-gradient(90deg,#3FA7CF 0 50%,#15934A 50% 100%)', text:'#FFFFFF'}
+];
+function roomColour(id){ return ROOM_COLOURS.find(c=>c.id===id) || ROOM_COLOURS[11]; }
+function roomColourCss(id){ return roomColour(id).css; }
+function roomKey(room){ return (room||'').trim().toLowerCase(); }
+function suggestedRoomColour(room, excludeId){
+  const key = roomKey(room);
+  if(!key) return 'black';
+  const same = state.boxes.find(b=>b.id!==excludeId && roomKey(b.room)===key && b.roomColor);
+  if(same) return same.roomColor;
+  const used = new Set(state.boxes.filter(b=>b.id!==excludeId && roomKey(b.room)!==key).map(b=>b.roomColor).filter(Boolean));
+  return (ROOM_COLOURS.find(c=>!used.has(c.id)) || ROOM_COLOURS[ROOM_COLOURS.length-1]).id;
+}
+function ensureRoomColours(){
+  const byRoom = new Map();
+  const used = new Set();
+  state.boxes.slice().sort((a,b)=>a.number-b.number).forEach(b=>{
+    const key = roomKey(b.room);
+    if(key && b.roomColor && !byRoom.has(key)){ byRoom.set(key,b.roomColor); used.add(b.roomColor); }
+  });
+  state.boxes.slice().sort((a,b)=>a.number-b.number).forEach(b=>{
+    const key = roomKey(b.room);
+    if(!key){ if(!b.roomColor) b.roomColor='black'; return; }
+    if(byRoom.has(key)){ b.roomColor=byRoom.get(key); return; }
+    const next = (ROOM_COLOURS.find(c=>!used.has(c.id)) || ROOM_COLOURS[ROOM_COLOURS.length-1]).id;
+    byRoom.set(key,next); used.add(next); b.roomColor=next;
+  });
+}
+function renderRoomColourPickerHTML(selected){
+  return `<div class="room-colour-grid">${ROOM_COLOURS.map(c=>`
+    <button type="button" class="room-colour-option ${selected===c.id?'selected':''}" data-colour="${c.id}" onclick="selectRoomColour('${c.id}')">
+      <div class="room-colour-swatch" style="background:${c.css}"></div>
+      <span class="room-colour-name">${escapeHtml(c.name)}</span>
+    </button>`).join('')}</div>`;
+}
+function selectRoomColour(id){
+  state.draft.roomColor=id;
+  state.draft._manualRoomColour=true;
+  document.querySelectorAll('.room-colour-option').forEach(el=>el.classList.toggle('selected',el.dataset.colour===id));
+}
 
 // --- Local storage layer (IndexedDB) — each device keeps its own data; use Export/Import to move data between devices ---
 const DB_NAME = 'manifestDB', STORE_NAME = 'kv';
@@ -411,7 +547,7 @@ async function idbSet(key, value){
 
 let state = {
   boxes: [],
-  view: 'list',      // list | form | detail | scan | checklist
+  view: 'list',      // list | form | detail | scan | checklist | roomkey | transfer
   currentId: null,
   search: '',
   draft: null,
@@ -422,6 +558,7 @@ let scanRAF = null;
 
 function migrateBox(b){
   if(b.moved===undefined) b.moved = false;
+  if(!b.roomColor) b.roomColor = '';
   if(!b.createdAt){
     const ts = parseInt((b.id||'').replace('b',''),10);
     b.createdAt = new Date(isNaN(ts)?Date.now():ts).toISOString();
@@ -438,6 +575,7 @@ async function loadBoxes(){
     state.boxes = val ? JSON.parse(val) : [];
   }catch(e){ state.boxes = []; }
   state.boxes.forEach(migrateBox);
+  ensureRoomColours();
   state.loaded = true;
   render();
 }
@@ -490,7 +628,7 @@ function parseQrValue(text){
 function goList(){ stopScan(); state.view='list'; state.currentId=null; render(); }
 function goNew(){
   stopScan();
-  state.draft = { id: 'b'+Date.now(), number: nextBoxNumber(), room:'', photo:null, items:[], moved:false, createdAt: new Date().toISOString() };
+  state.draft = { id: 'b'+Date.now(), number: nextBoxNumber(), room:'', roomColor:'', photo:null, items:[], moved:false, createdAt: new Date().toISOString() };
   state.view='form'; render();
 }
 function goEdit(id){
@@ -502,6 +640,7 @@ function goEdit(id){
 function goDetail(id){ stopScan(); state.currentId=id; state.view='detail'; render(); }
 function goScan(){ state.view='scan'; render(); startScan(); }
 function goChecklist(){ stopScan(); state.view='checklist'; render(); }
+function goRoomKey(){ stopScan(); state.view='roomkey'; render(); }
 function goTransfer(){ stopScan(); state.pendingImport = null; state.view='transfer'; render(); }
 
 function render(){
@@ -512,6 +651,7 @@ function render(){
   if(state.view==='detail') return renderDetail(app);
   if(state.view==='scan') return renderScan(app);
   if(state.view==='checklist') return renderChecklist(app);
+  if(state.view==='roomkey') return renderRoomKey(app);
   if(state.view==='transfer') return renderTransfer(app);
 }
 
@@ -520,6 +660,8 @@ function renderList(app){
   let html = `
     <header>
       <div class="header-actions">
+        <button onclick="printAllLabels()" title="Print all A6 labels">${ICONS.printer}</button>
+        <button onclick="goRoomKey()" title="Room colour key">${ICONS.palette}</button>
         <button onclick="goTransfer()" title="Export / Import">${ICONS.transfer}</button>
         <button onclick="goChecklist()" title="Move-out checklist">${ICONS.clipboard}</button>
         <button onclick="exportCSV()" title="Export CSV">${ICONS.download}</button>
@@ -565,12 +707,13 @@ function renderList(app){
     state.boxes.slice().sort((a,b)=>a.number-b.number).forEach(b=>{
       html += `
         <div class="box-card ${b.moved?'is-moved':''}" onclick="goDetail('${b.id}')">
+          <div class="room-colour-strip" style="background:${roomColourCss(b.roomColor)}"></div>
           <span class="count">${b.items.length}</span>
           ${b.moved ? `<span class="moved-badge">${ICONS.check}</span>` : ''}
           ${b.photo ? `<img class="thumb" src="${b.photo}">` : `<div class="thumb placeholder">${ICONS.box}</div>`}
           <div class="meta">
             <div class="num">${pad(b.number)}</div>
-            <div class="room">${escapeHtml(b.room || 'No location set')}</div>
+            <div class="room"><span class="room-dot" style="background:${roomColourCss(b.roomColor)}"></span>${escapeHtml(b.room || 'No location set')}</div>
           </div>
         </div>`;
     });
@@ -601,7 +744,12 @@ function renderForm(app){
       </div>
       <div class="field">
         <label class="field-label">Room / destination</label>
-        <input type="text" id="f-room" placeholder="e.g. Kitchen, Spare room" value="${escapeAttr(d.room)}">
+        <input type="text" id="f-room" placeholder="e.g. Kitchen, Spare room" value="${escapeAttr(d.room)}" oninput="state.draft.room=this.value">
+      </div>
+      <div class="field">
+        <label class="field-label">Room tape colour</label>
+        <div class="room-colour-help">Match this to the coloured tape on the physical box. The same room will reuse the same colour automatically; Blue + green is available as an extra combination.</div>
+        ${renderRoomColourPickerHTML(d.roomColor)}
       </div>
       <div class="field">
         <label class="field-label">Photo of contents</label>
@@ -643,7 +791,7 @@ function renderDetail(app){
       <div class="stamp-row">
         <div class="stamp"><span>№</span> ${pad(b.number)}</div>
       </div>
-      <div class="room-tag">${escapeHtml(b.room || 'No location set')}</div>
+      <div class="room-tag"><span class="room-dot" style="background:${roomColourCss(b.roomColor)}"></span>${escapeHtml(b.room || 'No location set')} · ${escapeHtml(roomColour(b.roomColor).name)}</div>
       <hr class="divider">
       <div class="section-label">Contents (${b.items.length})</div>
       <ul class="contents-list">
@@ -755,6 +903,73 @@ function renderChecklist(app){
   app.innerHTML = html;
 }
 
+function renderRoomKey(app){
+  const groups = new Map();
+  state.boxes.slice().sort((a,b)=>a.number-b.number).forEach(b=>{
+    const key = roomKey(b.room) || '__unsorted__';
+    if(!groups.has(key)) groups.set(key, { room: b.room.trim() || 'Unsorted', colourId: b.roomColor || 'black', boxes: [] });
+    const g = groups.get(key);
+    g.boxes.push(b);
+    // Use the first assigned colour for the room; saveForm keeps rooms consistent.
+    if(!g.colourId && b.roomColor) g.colourId = b.roomColor;
+  });
+
+  const entries = Array.from(groups.values()).sort((a,b)=>{
+    if(a.room==='Unsorted') return 1; if(b.room==='Unsorted') return -1;
+    return a.room.localeCompare(b.room);
+  });
+  const used = new Set(entries.map(g=>g.colourId).filter(Boolean));
+  const unused = ROOM_COLOURS.filter(c=>!used.has(c.id));
+
+  let html = `
+    <div class="view-header">
+      <button class="back-btn" onclick="goList()">${ICONS.back}</button>
+      <h2>Room colour key</h2>
+    </div>
+    <div class="form-body">
+      <div class="room-key-intro">Use this as your moving-day tape guide. Every box for the same room uses the same colour, so you can spot its destination before reading the label.</div>
+      <div class="room-key-summary">
+        <div class="room-key-stat"><strong>${entries.length}</strong><span>Rooms assigned</span></div>
+        <div class="room-key-stat"><strong>${unused.length}</strong><span>Colours available</span></div>
+      </div>`;
+
+  if(!entries.length){
+    html += `<div class="empty-state"><h3>No room colours yet</h3><p>Add your first box and choose its destination room. Manifest will build the key automatically.</p></div>`;
+  } else {
+    entries.forEach(g=>{
+      const c = roomColour(g.colourId);
+      html += `
+        <div class="room-key-card">
+          <div class="room-key-band" style="background:${c.css}"></div>
+          <div class="room-key-body">
+            <div class="room-key-top">
+              <div>
+                <div class="room-key-room">${escapeHtml(g.room)}</div>
+                <div class="room-key-tape">Tape: ${escapeHtml(c.name)}</div>
+              </div>
+              <div class="room-key-count">${g.boxes.length} box${g.boxes.length===1?'':'es'}</div>
+            </div>
+            <div class="room-key-boxes">
+              ${g.boxes.map(b=>`<button class="room-key-box" onclick="goDetail('${b.id}')">BOX ${pad(b.number)}</button>`).join('')}
+            </div>
+          </div>
+        </div>`;
+    });
+
+    html += `<div class="room-key-unused">
+      <div class="section-label">Unused tape colours (${unused.length})</div>
+      ${unused.length ? `<div class="room-key-unused-grid">${unused.map(c=>`
+        <div class="room-key-unused-item">
+          <div class="room-key-unused-swatch" style="background:${c.css}"></div>
+          <div class="room-key-unused-name">${escapeHtml(c.name)}</div>
+        </div>`).join('')}</div>` : `<div class="room-colour-help">All colour options are currently assigned. Blue + green can be reused as an extra combination if you add more rooms.</div>`}
+    </div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
 function renderTransfer(app){
   const pending = state.pendingImport;
   app.innerHTML = `
@@ -828,6 +1043,7 @@ async function applyImport(mode){
     state.boxes = state.boxes.concat(toAdd);
   }
   state.pendingImport = null;
+  ensureRoomColours();
   await saveBoxes();
   goList();
 }
@@ -842,15 +1058,15 @@ async function toggleMoved(id){
 
 function exportCSV(){
   if(state.boxes.length===0){ alert('No boxes packed yet — nothing to export.'); return; }
-  const rows = [['Box Number','Room / Destination','Item','Item Photo','Items In Box','Status','Date Packed']];
+  const rows = [['Box Number','Room / Destination','Tape Colour','Item','Item Photo','Items In Box','Status','Date Packed']];
   state.boxes.slice().sort((a,b)=>a.number-b.number).forEach(b=>{
     const dateStr = b.createdAt ? new Date(b.createdAt).toLocaleDateString() : '';
     const status = b.moved ? 'Loaded / Delivered' : 'Packed';
     if(b.items.length===0){
-      rows.push([pad(b.number), b.room||'', '', '', '0', status, dateStr]);
+      rows.push([pad(b.number), b.room||'', roomColour(b.roomColor).name, '', '', '0', status, dateStr]);
     } else {
       b.items.forEach(it=>{
-        rows.push([pad(b.number), b.room||'', it.name, it.photo?'Yes':'No', String(b.items.length), status, dateStr]);
+        rows.push([pad(b.number), b.room||'', roomColour(b.roomColor).name, it.name, it.photo?'Yes':'No', String(b.items.length), status, dateStr]);
       });
     }
   });
@@ -1006,8 +1222,18 @@ async function saveForm(){
   const room = document.getElementById('f-room').value.trim();
   const d = state.draft;
   d.number = number; d.room = room;
+  if(!d.roomColor) d.roomColor = suggestedRoomColour(room, d.id);
+  // If another box already belongs to this room, keep the room colour consistent unless this draft was manually changed.
+  const sameRoom = state.boxes.find(b=>b.id!==d.id && roomKey(b.room)===roomKey(room) && b.roomColor);
+  if(sameRoom && !state.draft._manualRoomColour) d.roomColor = sameRoom.roomColor;
+  const manuallyChangedRoomColour = !!state.draft._manualRoomColour;
+  delete d._manualRoomColour;
   const idx = state.boxes.findIndex(b=>b.id===d.id);
   if(idx>=0) state.boxes[idx] = d; else state.boxes.push(d);
+  // A room has one physical tape colour. If you change it on any box, update every box in that room.
+  if(manuallyChangedRoomColour && roomKey(room)){
+    state.boxes.forEach(b=>{ if(roomKey(b.room)===roomKey(room)) b.roomColor=d.roomColor; });
+  }
   await saveBoxes();
   goDetail(d.id);
 }
@@ -1022,14 +1248,55 @@ async function deleteBox(id){
   goList();
 }
 
+function buildPrintCard(b){
+  const colour = roomColour(b.roomColor);
+  const card = document.createElement('section');
+  card.className = 'a6-label';
+  const count = b.items.length;
+  const density = count > 10 ? 'dense' : count > 6 ? 'compact' : 'normal';
+  card.innerHTML = `
+    <div class="a6-room-band" style="background:${colour.css};color:${colour.text}">
+      <div class="a6-room-kicker">Destination room</div>
+      <div class="a6-room-name">${escapeHtml(b.room || 'Unsorted')}</div>
+    </div>
+    <div class="a6-body">
+      <div class="a6-box-row">
+        <div><div class="a6-box-label">Box</div><div class="a6-box-num">${pad(b.number)}</div></div>
+        <div class="a6-colour-name">Tape: ${escapeHtml(colour.name)}</div>
+      </div>
+      <div class="a6-contents-title">Contents (${count})</div>
+      <ul class="a6-contents ${density}">
+        ${count ? b.items.map(it=>`<li>• ${escapeHtml(it.name)}</li>`).join('') : '<li>No items logged</li>'}
+      </ul>
+      <div class="a6-footer">
+        <div class="a6-footer-copy">
+          <div class="a6-code">${qrValue(b.number)}</div>
+          <div class="a6-hint">Scan in Manifest to open this box instantly.</div>
+        </div>
+        <div class="a6-qr"></div>
+      </div>
+    </div>`;
+  new QRCode(card.querySelector('.a6-qr'), {
+    text: qrValue(b.number), width:220, height:220, colorDark:'#20233A', colorLight:'#FFFFFF'
+  });
+  return card;
+}
+
+function printBoxes(boxes){
+  if(!boxes.length){ alert('No boxes packed yet — nothing to print.'); return; }
+  const area = document.getElementById('printArea');
+  area.innerHTML = '';
+  boxes.slice().sort((a,b)=>a.number-b.number).forEach(b=>area.appendChild(buildPrintCard(b)));
+  setTimeout(()=>window.print(), 250);
+}
+
 function printLabel(id){
   const b = state.boxes.find(x=>x.id===id);
-  document.getElementById('printNum').textContent = 'BOX ' + pad(b.number);
-  document.getElementById('printRoom').textContent = b.room || '';
-  const qrHost = document.getElementById('printQr');
-  qrHost.innerHTML = '';
-  new QRCode(qrHost, { text: qrValue(b.number), width:220, height:220, colorDark:"#000000", colorLight:"#ffffff" });
-  setTimeout(()=>window.print(), 150);
+  if(b) printBoxes([b]);
+}
+
+function printAllLabels(){
+  printBoxes(state.boxes);
 }
 
 function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
