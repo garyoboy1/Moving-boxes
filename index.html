@@ -9,6 +9,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Manifest">
 <meta name="theme-color" content="#20233A">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script>if(window.navigator.standalone===true){document.documentElement.classList.add('ios-standalone');}</script>
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +32,16 @@
     --line:#D8D2C2;
     --danger:#B4432F;
     --radius:14px;
+    --app-safe-top:env(safe-area-inset-top);
+    --app-safe-bottom:env(safe-area-inset-bottom);
+    --app-safe-left:env(safe-area-inset-left);
+    --app-safe-right:env(safe-area-inset-right);
+  }
+  /* iPhone Home Screen apps can report a zero inset on some launches.
+     Keep a minimum Dynamic-Island/status-bar clearance in standalone mode. */
+  html.ios-standalone{
+    --app-safe-top:max(58px, env(safe-area-inset-top));
+    --app-safe-bottom:max(20px, env(safe-area-inset-bottom));
   }
   *{box-sizing:border-box;}
   body{
@@ -41,13 +55,13 @@
   }
   .mono{ font-family:'JetBrains Mono',monospace; }
 
-  #app{ max-width:520px; margin:0 auto; min-height:100vh; padding-bottom:calc(90px + env(safe-area-inset-bottom)); }
+  #app{ max-width:520px; margin:0 auto; min-height:100vh; padding-bottom:calc(90px + var(--app-safe-bottom)); }
 
   /* iPhone safe-area aware layout */
   /* HEADER */
   header{
     background:var(--ink); color:var(--paper);
-    padding:calc(22px + env(safe-area-inset-top)) calc(18px + env(safe-area-inset-right)) 26px calc(18px + env(safe-area-inset-left));
+    padding:calc(18px + var(--app-safe-top)) calc(18px + var(--app-safe-right)) 26px calc(18px + var(--app-safe-left));
     position:relative; overflow:hidden;
   }
   header::after{
@@ -120,7 +134,7 @@
   }
 
   .header-actions{
-    position:absolute; top:calc(22px + env(safe-area-inset-top)); right:calc(18px + env(safe-area-inset-right)); display:flex; gap:8px; z-index:2;
+    position:absolute; top:calc(18px + var(--app-safe-top)); right:calc(18px + var(--app-safe-right)); display:flex; gap:8px; z-index:2;
   }
   .header-actions button{
     background:rgba(255,255,255,0.1); border:none; color:var(--paper); width:36px; height:36px;
@@ -168,7 +182,7 @@
 
   /* FAB */
   .fab{
-    position:fixed; bottom:calc(24px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%);
+    position:fixed; bottom:calc(24px + var(--app-safe-bottom)); left:50%; transform:translateX(-50%);
     max-width:520px; width:calc(100% - 36px);
     display:flex; gap:10px; z-index:20;
   }
@@ -184,7 +198,7 @@
   /* FORM / DETAIL VIEWS */
   .view-header{
     display:flex; align-items:center; gap:12px;
-    padding:calc(16px + env(safe-area-inset-top)) calc(18px + env(safe-area-inset-right)) 16px calc(18px + env(safe-area-inset-left));
+    padding:calc(12px + var(--app-safe-top)) calc(18px + var(--app-safe-right)) 14px calc(18px + var(--app-safe-left));
     background:var(--card);
     border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5;
   }
@@ -207,15 +221,18 @@
 
 
   /* ROOM / TAPE COLOURS */
-  .room-colour-help{ font-size:12px; color:var(--ink-soft); margin:6px 0 10px; line-height:1.4; }
-  .room-colour-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:9px; }
+  .room-colour-panel{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px; }
+  .room-colour-current{ display:flex; align-items:center; gap:9px; font-size:13px; font-weight:700; margin-bottom:10px; }
+  .room-colour-current-swatch{ width:28px; height:28px; border-radius:8px; border:1px solid rgba(32,35,58,0.18); flex-shrink:0; }
+  .room-colour-help{ font-size:12px; color:var(--ink-soft); margin:0 0 10px; line-height:1.4; }
+  .room-colour-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
   .room-colour-option{
     border:2px solid transparent; border-radius:11px; padding:5px; background:var(--card);
     cursor:pointer; text-align:center; min-width:0;
   }
   .room-colour-option.selected{ border-color:var(--ink); box-shadow:0 0 0 2px rgba(32,35,58,0.08); }
-  .room-colour-swatch{ height:34px; border-radius:7px; border:1px solid rgba(32,35,58,0.16); }
-  .room-colour-name{ display:block; font-size:10px; margin-top:4px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .room-colour-swatch{ height:42px; border-radius:8px; border:1px solid rgba(32,35,58,0.16); }
+  .room-colour-name{ display:block; font-size:11px; margin-top:4px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .room-dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; border:1px solid rgba(32,35,58,0.18); vertical-align:0; }
   .room-colour-strip{ height:7px; width:100%; }
 
@@ -508,16 +525,40 @@ function ensureRoomColours(){
   });
 }
 function renderRoomColourPickerHTML(selected){
-  return `<div class="room-colour-grid">${ROOM_COLOURS.map(c=>`
-    <button type="button" class="room-colour-option ${selected===c.id?'selected':''}" data-colour="${c.id}" onclick="selectRoomColour('${c.id}')">
-      <div class="room-colour-swatch" style="background:${c.css}"></div>
-      <span class="room-colour-name">${escapeHtml(c.name)}</span>
-    </button>`).join('')}</div>`;
+  const c = roomColour(selected || 'black');
+  return `<div class="room-colour-panel">
+    <div class="room-colour-current">
+      <span id="roomColourCurrentSwatch" class="room-colour-current-swatch" style="background:${c.css}"></span>
+      <span>Selected tape: <strong id="roomColourCurrentName">${escapeHtml(c.name)}</strong></span>
+    </div>
+    <div class="room-colour-help">Choose the tape colour you are putting on this room's boxes. Every box with the same room name will use the same colour.</div>
+    <div class="room-colour-grid">${ROOM_COLOURS.map(col=>`
+      <button type="button" class="room-colour-option ${selected===col.id?'selected':''}" data-colour="${col.id}" onclick="selectRoomColour('${col.id}')">
+        <div class="room-colour-swatch" style="background:${col.css}"></div>
+        <span class="room-colour-name">${escapeHtml(col.name)}</span>
+      </button>`).join('')}</div>
+  </div>`;
+}
+function refreshRoomColourPicker(){
+  if(!state.draft) return;
+  const c = roomColour(state.draft.roomColor || 'black');
+  const sw = document.getElementById('roomColourCurrentSwatch');
+  const nm = document.getElementById('roomColourCurrentName');
+  if(sw) sw.style.background=c.css;
+  if(nm) nm.textContent=c.name;
+  document.querySelectorAll('.room-colour-option').forEach(el=>el.classList.toggle('selected',el.dataset.colour===state.draft.roomColor));
 }
 function selectRoomColour(id){
   state.draft.roomColor=id;
   state.draft._manualRoomColour=true;
-  document.querySelectorAll('.room-colour-option').forEach(el=>el.classList.toggle('selected',el.dataset.colour===id));
+  refreshRoomColourPicker();
+}
+function onRoomInput(value){
+  state.draft.room=value;
+  if(!state.draft._manualRoomColour){
+    state.draft.roomColor=suggestedRoomColour(value,state.draft.id);
+    refreshRoomColourPicker();
+  }
 }
 
 // --- Local storage layer (IndexedDB) — each device keeps its own data; use Export/Import to move data between devices ---
@@ -671,7 +712,7 @@ function renderList(app){
         <button onclick="exportCSV()" title="Export CSV">${ICONS.download}</button>
       </div>
       <h1 class="stencil">Manifest</h1>
-      <p>${state.boxes.length} box${state.boxes.length===1?'':'es'} packed &nbsp;·&nbsp; ${state.boxes.reduce((a,b)=>a+b.items.length,0)} items tracked</p>
+      <p>${state.boxes.length} box${state.boxes.length===1?'':'es'} packed &nbsp;·&nbsp; ${state.boxes.reduce((a,b)=>a+b.items.length,0)} items tracked &nbsp;·&nbsp; v1.4</p>
     </header>
     <div class="searchbar">
       ${ICONS.search}
@@ -748,11 +789,10 @@ function renderForm(app){
       </div>
       <div class="field">
         <label class="field-label">Room / destination</label>
-        <input type="text" id="f-room" placeholder="e.g. Kitchen, Spare room" value="${escapeAttr(d.room)}" oninput="state.draft.room=this.value">
+        <input type="text" id="f-room" placeholder="e.g. Kitchen, Spare room" value="${escapeAttr(d.room)}" oninput="onRoomInput(this.value)">
       </div>
       <div class="field">
         <label class="field-label">Room tape colour</label>
-        <div class="room-colour-help">Match this to the coloured tape on the physical box. The same room will reuse the same colour automatically; Blue + green is available as an extra combination.</div>
         ${renderRoomColourPickerHTML(d.roomColor)}
       </div>
       <div class="field">
